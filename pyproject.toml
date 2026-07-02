@@ -1,0 +1,45 @@
+[project]
+name = "ai-helpdesk-router"
+version = "1.0.0"
+description = "AI-Powered IT/Admin Helpdesk Router (MVP) — multi-agent ticket triage, RAG resolution, routing & escalation."
+readme = "README.md"
+requires-python = ">=3.11"
+
+# Pinned loosely so the project installs on a range of interpreters. On Python 3.14
+# ChromaDB / sentence-transformers may not have wheels yet; the VectorStore layer
+# falls back to a pure-numpy cosine backend automatically (see app/core/vectorstore.py).
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2.6",
+    "pydantic-settings>=2.2",
+    "sqlalchemy>=2.0",
+    "passlib[bcrypt]>=1.7",
+    # passlib 1.7.x is incompatible with bcrypt >=4.1 (removed __about__, hard 72-byte limit).
+    "bcrypt<4.1",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27",
+    "numpy>=1.26",
+    "streamlit>=1.33",
+    "pandas>=2.2",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Best-effort: install if your interpreter has wheels available.
+vector = ["chromadb>=0.5"]
+ocr = ["pytesseract>=0.3.10", "Pillow>=10.0"]
+llm = ["google-generativeai>=0.7"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["backend/tests"]
+pythonpath = ["backend"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = []
